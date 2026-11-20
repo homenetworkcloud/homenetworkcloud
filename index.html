@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Smart · I miei progetti Home Assistant</title>
+<meta name="description" content="Progetti di domotica con Home Assistant: dashboard, stufa a pellet, sensore di presenza a 9 zone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+:root{
+  --paper:#EEF2F5; --ink:#12263A; --muted:#5A6B7B; --line:#D3DCE4;
+  --card:#FFFFFF; --lamp:#F6B93B; --lamp-ink:#3A2A00; --teal:#1F7A8C;
+  --r-lg:22px; --r-sm:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;line-height:1.1;margin:0}
+a{color:var(--teal)}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+nav b{font:800 20px 'Bricolage Grotesque',sans-serif}
+nav a{margin-left:20px;text-decoration:none;color:var(--ink);font-weight:500}
+
+/* HERO */
+.hero{padding:40px 0 70px;display:grid;gap:36px}
+.hero h1{font-size:clamp(38px,7vw,68px);font-weight:800;max-width:15ch}
+.hero p{max-width:52ch;color:var(--muted);font-size:19px;margin:18px 0 0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.tile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:flex;flex-direction:column;gap:14px;transition:background .25s,color .25s,border-color .25s}
+.tile .ic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:var(--paper);transition:background .25s}
+.tile strong{font:700 18px 'Bricolage Grotesque',sans-serif}
+.tile small{color:var(--muted);font-size:14px}
+.tile[aria-pressed="true"]{background:var(--lamp);border-color:var(--lamp);color:var(--lamp-ink)}
+.tile[aria-pressed="true"] .ic{background:rgba(255,255,255,.55)}
+.tile[aria-pressed="true"] small{color:var(--lamp-ink)}
+.tile:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+.hint{font-size:14px;color:var(--muted);margin-top:-14px}
+
+/* PROGETTI */
+section{padding:50px 0}
+section>.wrap>h2{font-size:clamp(28px,4vw,40px);margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column}
+.shot{aspect-ratio:16/9;background:linear-gradient(135deg,#D9E6EC,#EEF2F5);display:grid;place-items:center;color:var(--teal);font-size:56px;border-bottom:1px solid var(--line)}
+.card .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card h3{font-size:23px}
+.card p{margin:0;color:var(--muted);font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.chips span{font-size:13px;font-weight:600;background:var(--paper);border-radius:99px;padding:4px 12px}
+.card a.more{font-weight:600;text-decoration:none}
+.card a.more:hover{text-decoration:underline}
+
+/* SCHEDA ESEMPIO */
+.detail{background:var(--card);border-block:1px solid var(--line)}
+.detail .cols{display:grid;grid-template-columns:1fr;gap:34px}
+@media(min-width:820px){.detail .cols{grid-template-columns:1.2fr 1fr}}
+.detail h2{font-size:clamp(30px,4.5vw,46px)}
+.detail ul{padding:0;margin:0;list-style:none;display:grid;gap:12px}
+.detail li{display:flex;gap:12px;align-items:flex-start}
+.detail li i{color:var(--teal);font-size:22px;line-height:1.4}
+pre{background:#12263A;color:#E6EEF4;border-radius:var(--r-sm);padding:18px;overflow-x:auto;font-size:14px;line-height:1.55;margin:0}
+.note{font-size:14px;color:var(--muted)}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:15px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <b>Casa Smart</b>
+    <div><a href="#progetti">Progetti</a><a href="#scheda">Scheda esempio</a><a href="#contatti">Contatti</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>La mia casa, automatizzata con Home Assistant</h1>
+      <p>Dashboard, riscaldamento e sensori fatti in casa, tutto locale e senza cloud. Qui trovi come funzionano, cosa serve e come rifarli.</p>
+    </div>
+    <div>
+      <div class="tiles" role="group" aria-label="Dispositivi di esempio">
+        <button class="tile" aria-pressed="false" data-on="Accesa" data-off="Spenta"><span class="ic"><i class="mdi mdi-fire"></i></span><strong>Stufa a pellet</strong><small>Spenta</small></button>
+        <button class="tile" aria-pressed="true" data-on="Presenza rilevata" data-off="Nessuna presenza"><span class="ic"><i class="mdi mdi-radar"></i></span><strong>Sensore 9 zone</strong><small>Presenza rilevata</small></button>
+        <button class="tile" aria-pressed="false" data-on="Attiva" data-off="Disattiva"><span class="ic"><i class="mdi mdi-view-dashboard"></i></span><strong>Dashboard</strong><small>Disattiva</small></button>
+      </div>
+      <p class="hint">Prova a toccare i riquadri: sono fatti come le tile di Home Assistant.</p>
+    </div>
+  </header>
+</div>
+
+<section id="progetti">
+  <div class="wrap">
+    <h2>Progetti</h2>
+    <div class="grid">
+      <article class="card">
+        <div class="shot"><i class="mdi mdi-cellphone"></i></div>
+        <div class="body">
+          <h3>Dashboard in stile iOS</h3>
+          <p>Interfaccia pulita con barra di navigazione in basso, pensata per l'uso da telefono.</p>
+          <div class="chips"><span>Home Assistant</span><span>Lovelace</span><span>Card custom</span></div>
+          <a class="more" href="#scheda">Leggi la scheda</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="shot"><i class="mdi mdi-fire"></i></div>
+        <div class="body">
+          <h3>Stufa a pellet controllata</h3>
+          <p>Accensione e spegnimento via MQTT, regolazione della potenza da 1 a 5 con comandi infrarossi.</p>
+          <div class="chips"><span>MQTT</span><span>Broadlink IR</span><span>Automazioni</span></div>
+          <a class="more" href="#scheda">Leggi la scheda</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="shot"><i class="mdi mdi-radar"></i></div>
+        <div class="body">
+          <h3>Sensore di presenza a 9 zone</h3>
+          <p>Un'automazione diversa per ogni zona della stanza, grazie al sensore SNWF-06P24.</p>
+          <div class="chips"><span>SNWF-06P24</span><span>Trigger per zona</span><span>Presenza</span></div>
+          <a class="more" href="#scheda">Leggi la scheda</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="scheda" class="detail">
+  <div class="wrap cols">
+    <div>
+      <h2>Scheda progetto: stufa a pellet</h2>
+      <p style="color:var(--muted)">Questa è la struttura che puoi copiare per ogni progetto: cosa fa, cosa serve, come si configura e cosa scaricare.</p>
+      <ul style="margin-top:22px">
+        <li><i class="mdi mdi-target"></i><span><b>Obiettivo.</b> Accendere, spegnere e regolare la stufa senza telecomando.</span></li>
+        <li><i class="mdi mdi-chip"></i><span><b>Materiale.</b> Broadlink (IR), broker MQTT, Home Assistant.</span></li>
+        <li><i class="mdi mdi-cog"></i><span><b>Come funziona.</b> Accensione e spegnimento passano da MQTT; la potenza si regola inviando il comando IR corretto.</span></li>
+        <li><i class="mdi mdi-download"></i><span><b>Download.</b> Configurazione YAML e blueprint (link da aggiungere).</span></li>
+      </ul>
+    </div>
+    <div>
+<pre><code># esempio: sostituisci con la tua configurazione
+# (senza IP, token o nomi reali)
+mqtt:
+  switch:
+    - name: "Stufa"
+      command_topic: "stufa/comando"
+      state_topic: "stufa/stato"</code></pre>
+      <p class="note">Prima di pubblicare, togli indirizzi IP, token, password e nomi di persone.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contatti">
+  <div class="wrap">
+    <h2>Contatti</h2>
+    <p>Hai domande o idee? Scrivimi sul forum di Home Assistant o apri una discussione nel repository GitHub.</p>
+  </div>
+</section>
+
+<footer><div class="wrap">Sito statico ospitato su GitHub Pages. Icone: Material Design Icons.</div></footer>
+
+<script>
+document.querySelectorAll('.tile').forEach(function(t){
+  t.addEventListener('click',function(){
+    var on=t.getAttribute('aria-pressed')!=='true';
+    t.setAttribute('aria-pressed',on);
+    t.querySelector('small').textContent=on?t.dataset.on:t.dataset.off;
+  });
+});
+</script>
+</body>
+</html>
